@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <script>
+    global.jQuery = require('jquery');
+    var $ = global.jQuery;
+  </script>
+
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- stylesheets -->
+
+  <link type="text/css" rel="stylesheet" href="style/main.css" />
+  <link type="text/css" rel="stylesheet" href="style/Fonts/ionicons/css/ionicons.min.css" />
+  <link type="text/css" rel="stylesheet" href="style/Fonts/ionicons/css/ionicons.min-v3.css" />
+  <link type="text/css" rel="stylesheet" href="style/Fonts/plugin-font/styles.css" />
+  <link type="text/css" rel="stylesheet" href="style/theme_light.css" />
+  <title>Translator</title>
+</head>
+
+
+<body onload="onLoaded();">
+  <div class="bg-menu-tabs">
+    <div class="container">
+      <div id="fade"></div>
+      <div id="modal">
+        <img id="loader" src="img/circles.svg" alt="loader" />
+      </div>
+      <!-- popup success -->
+      <div id="popup-success" class="w3-modal w3-animate-opacity">
+        <div class="form">
+          <h5 id="alertTitle"></h5>
+          <i id="alertIcon" class="ion-ios-close-outline"></i>
+          <p id="alertText"></p>
+          <button class="button-success" id="btn-success-popup"
+            onclick="document.getElementById('alertIcon').removeAttribute('class');document.getElementById('popup-success').style.display='none';"
+            type="button">OK</button>
+        </div>
+      </div>
+      <!-- End popup success -->
+      <div class="menu-tabs">
+        <div id="asset_collection_btn" onclick="switchTab(0)" data-locale="translationTab" title=""
+          data-toggle="tooltips" data-placement="bottom">
+          <div class="icon">
+            <i class="ion-ios-chatbubbles-outline"></i>
+          </div>
+        </div>
+        <div id="asset_search_btn" onclick="switchTab(1);" data-toggle="tooltips" title="" data-placement="bottom"
+          data-locale="configTab">
+          <div class="icon">
+            <i class="ion-ios-gear-outline"></i>
+          </div>
+        </div>
+        <div id="asset_selection_btn" onclick="mailToAuthor() " data-locale="openHelp" title="" data-toggle="tooltips"
+          data-placement="bottom">
+          <div class="icon">
+            <i class="ion-ios-help-circle-outline"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- tabs -->
+  <div id="tabs" style="display: none;">
+    <div>
+      <div class="tab on" onclick="switchTab(0)">
+        <p></p>
+      </div>
+      <div class="tab off" onclick="switchTab(1)">
+        <p></p>
+      </div>
+      <div class="tab off" onclick="switchTab(2)">
+        <p></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal_initial_configuration" class="w3-modal w3-animate-opacity" style="display: none;">
+    <div class="form" id="initCfgForm">
+      <h5 data-locale="initConfig" id="initCfgTitle">Initial Configuration</h5>
+      <fieldset class="assetDetails">
+        <legend class="" data-locale="googleConf">Google config</legend>
+        <div>
+          <label>API key</label>
+          <div class="input">
+            <input type="text" id="apiKeyInit">
+          </div>
+          <label id="keyValidation" style="color: red; display: none;" data-locale="keyValidation">Enter a valid
+            key</label>
+        </div>
+      </fieldset>
+      <button class="button button-Initial_Configuration1" type="button" data-locale="saveBtn"
+        onclick="saveInitialConfig();">Save</button>
+    </div>
+  </div>
+
+  <div id="settings">
+    <div class="content">
+      <div id="tab_content_0">
+        <div class="panel">
+          <div class="panel-group" id="accordionSearch">
+            <div class="panel panel-default">
+
+
+              <div class="panel-heading accordion-toggle notcollapsed" data-toggle="collapse"
+                data-parent="#accordionSearch" href="#collapse2">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle">
+                    <span class="lbl " data-locale="docTranslation">Document translation</span>
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse2" class="panel-collapse collapse in">
+                <form class="form-horizontal" id="contentSearchForm">
+                  <br>
+                  <div>
+                    <div>
+                      <input type="radio" id="all" name="translate" value="all" style="width: 20px; margin: 0 0;"
+                        checked>
+                      <label class="radio-label" for="all" data-locale="allDoc">All document</label>
+                    </div>
+                    <div class="p-b-10">
+                      <input type="radio" id="sel" name="translate" value="sel" style="width: 20px; margin: 0 0;">
+                      <label class="radio-label" for="sel" data-locale="selection">Selection</label>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;">
+                      <label data-locale="from">From</label>
+                      <select tabindex="3" id="docTranslateLanguagesFrom"
+                        class="topcoat-button--large hostFontSize select-lang" onfocus="">
+                        <option data-locale="chooseLang">Choose language</option>
+                      </select>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;">
+                      <label data-locale="to">To</label>
+                      <select tabindex="3" id="docTranslateLanguagesTo"
+                        class="topcoat-button--large hostFontSize select-lang" onfocus="">
+                        <option data-locale="chooseLang">Choose language</option>
+                      </select>
+                    </div>
+                    <div class="search-button">
+
+                      <button type='button' id="search" name="search" data-locale="translate"
+                        class="button-right-Config-save " onclick="translateAll('translate')">Translate</button>
+                      <button data-locale="exportExcel" type="button" class="button-right-Config-save"
+                        onclick="translateAll('export')">Export excel</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+
+              <!--   layers translation -->
+              <div class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
+                data-parent="#accordionSearch" href="#collapse4">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle">
+                    <span class="lbl " data-locale="">Layers translation</span>
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse4" class="panel-collapse collapse">
+                <form class="form-horizontal">
+                  <br>
+                  <div>
+                    <div id="layers" class="select">
+                      <select id="layers-select" class="button-no-margin topcoat-button--large hostFontSize"
+                        multiple="multiple" size="6">
+                        
+                      </select>
+                      </select>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;">
+                      <label data-locale="from">From</label>
+                      <select tabindex="3" id="layersLanguageFrom"
+                        class="topcoat-button--large hostFontSize select-lang" onfocus="">
+                        <option data-locale="chooseLang">Choose language</option>
+                      </select>
+                    </div>
+                    <div style="display: flex;justify-content: space-between;">
+                      <label data-locale="to">To</label>
+                      <select tabindex="3" id="layersLanguageTo" class="topcoat-button--large hostFontSize select-lang"
+                        onfocus="">
+                        <option data-locale="chooseLang">Choose language</option>
+                      </select>
+                    </div>
+                    <div class="search-button">
+                      <button type='button' id="" name="" data-locale="translate" class="button-right-Config-save "
+                        onclick="translateAllLayers('translate')">Translate</button>
+                      <button data-locale="exportExcel" type="button" class="button-right-Config-save" onclick="translateAllLayers('export')">Export
+                        excel</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- layers translation  -->
+
+              <div class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
+                data-parent="#accordionSearch" href="#collapse3">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle">
+                    <span class="lbl " data-locale="importTranslations">Import translations</span>
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse3" class="panel-collapse collapse ">
+                <form class="form-horizontal" onsubmit="readTranslationsFromExcelFile();return false;"
+                  id="importExcelForm">
+                  <br>
+                  <div class="button-wrap">
+                    <label class="new-button" for="excelFile" data-locale="choose">Choose</label>
+                    <input id="excelFile" type="file">
+                  </div>
+                  <div class="search-button">
+                    <button type='submit' data-locale="apply" class="button-right ">Apply translations</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
+                data-parent="#accordionSearch" href="#collapse1">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle">
+                    <span class="lbl " data-locale="quickTranslation">Quick translation</span>
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse ">
+                <form class="form-horizontal" onsubmit="quickTranslate();return false;">
+                  <br>
+                  <div class="p-b-5">
+                    <textarea id="quickFrom" class="textArea" rows="4" cols="50" style="color: white"> </textarea>
+                  </div>
+                  <div style="display: flex;justify-content: space-between;">
+                    <label data-locale="from">From</label>
+                    <select tabindex="3" id="selectLanguagesQuickFrom"
+                      class="topcoat-button--large hostFontSize select-lang" onfocus="">
+                      <option data-locale="chooseLang">Choose language</option>
+
+                    </select>
+                  </div>
+                  <div style="display: flex;justify-content: space-between;">
+                    <label data-locale="to">To</label>
+                    <select tabindex="3" id="selectLanguagesQuickTo"
+                      class="topcoat-button--large hostFontSize select-lang" onfocus="">
+                      <option data-locale="chooseLang">Choose language</option>
+
+                    </select>
+                  </div>
+                  <div class="search-button">
+                    <button type='submit' data-locale="translate" class="button-right ">Translate</button>
+                  </div>
+                  <br />
+                  <br />
+                  <label data-locale="result">Result</label>
+                  <textarea id="quickResult" class="textArea" rows="4" cols="50" style="color: white"></textarea>
+
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div id="tab_content_1">
+        <div class="panel">
+          <div class="configuration-header">
+            <h5 data-locale="configuration">Configuration</h5>
+          </div>
+          <fieldset class="assetDetails">
+            <legend class="" data-locale="googleConf">Google config</legend>
+
+            <div>
+              <label>API key</label>
+              <div class="input">
+                <input type="text" id="apiKey" data-toggle="tooltips" title="" data-placement="bottom">
+              </div>
+            </div>
+            <div class="select">
+              <select id="translationMode" class="topcoat-button--large hostFontSize" style="width: 236px;">
+                <option value="nmt">NMT</option>
+                <option value="base">Base</option>
+
+              </select>
+            </div>
+          </fieldset>
+          <fieldset class="assetDetails">
+            <legend class="" data-locale="export">Export</legend>
+
+            <div>
+              <label data-locale="exportDir">Export directory</label>
+              <div class="input">
+                <input type="text" id="exportDirectory" onclick="chooseFolder();" data-toggle="tooltips" title=""
+                  data-placement="bottom">
+              </div>
+            </div>
+
+          </fieldset>
+          <fieldset>
+            <legend data-locale="defaultTrans">Default languages</legend>
+            <div>
+              <label data-locale="from">From</label>
+              <div id="" class="select">
+                <select id="pluginLanguage" class="topcoat-button--large hostFontSize" style="width: 236px;">
+                </select>
+              </div>
+              <label data-locale="to">To</label>
+              <div id="" class="select">
+                <select id="pluginLanguageTo" class="topcoat-button--large hostFontSize" style="width: 236px;">
+                </select>
+              </div>
+            </div>
+            <div> </div>
+          </fieldset>
+          <button id="save" name="save" data-locale="saveBtn" type="button" class="button-right-Config-save"
+            onclick="saveConfiguration();">Save</button>
+        </div>
+      </div>
+
+      <div id="tab_content_2">
+        <div class="panel">
+          <p> tab 2</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="lib/CSInterface.js"></script>
+  <script src="lib/themeManager.js"></script>
+  <script src="js_scripts/configFile.js"></script>
+  <script src="js_scripts/utils.js"></script>
+  <script src="js_scripts/functions.js"></script>
+  <script src="js_scripts/configuration.js"></script>
+  <script src="js_scripts/main.js"></script>
+  <script src="ext.js"></script>
+</body>
+
+</html>

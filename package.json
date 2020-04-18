@@ -1,0 +1,31 @@
+{
+    "name": "tn.tunit.translator",
+    "version": "1.0.0",
+    "description": "Automatic translation for Adobe InDesign",
+    "main": "ext.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Oussama Touzni",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "es6-promise": "^4.2.8",
+        "https": "^1.0.0",
+        "import": "0.0.6",
+        "jquery": "^2.2.4",
+        "nocache": "^2.1.0",
+        "npm": "^5.10.0",
+        "querystring": "^0.2.0",
+        "request": "^2.88.2",
+        "require": "^2.4.20",
+        "stringify": "^5.2.0",
+        "xlsx": "^0.15.6"
+    },
+    "devDependencies": {
+        "json-server": "^0.14.2"
+    }
+}
