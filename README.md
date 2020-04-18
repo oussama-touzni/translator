@@ -1,2 +1,2 @@
 # translator
-translator with goofle API for Adobe InDesign
+translator with Google Cloud Translation API for Adobe InDesign
