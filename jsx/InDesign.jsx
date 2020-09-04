@@ -15,7 +15,7 @@ $._ext_IDSN = {
                 if (pi.contents.constructor.name == "String") {
                     var frame = {
                         id: pi.id,
-                        originalText: pi.contents,
+                        originalText: pi.parentStory.contents,
                         translatedText: ""
                     };
                     textFrames.push(frame);
@@ -28,7 +28,7 @@ $._ext_IDSN = {
     applyTranslations: function (translations) {
         var doc = app.activeDocument;
         for (var i = 0; i < translations.length; i++) {
-            doc.textFrames.itemByID(translations[i].id).contents = translations[i].translatedText;
+            doc.textFrames.itemByID(translations[i].id).parentStory.contents = translations[i].translatedText;
         }
     },
     isDocumentOpen: function () {
@@ -63,7 +63,7 @@ $._ext_IDSN = {
                             layerId: layer.id,
                             layerName: layer.name,
                             id: pi.id,
-                            originalText: pi.contents,
+                            originalText: pi.parentStory.contents,
                             translatedText: ""
                         };
                         textFrames.push(frame);
@@ -95,7 +95,7 @@ $._ext_IDSN = {
 
             }
             for (var i = 0; i < translations.length; i++) {
-                doc.textFrames.itemByID(translations[i].id).contents = translations[i].translatedText;
+                doc.textFrames.itemByID(translations[i].id).parentStory.contents = translations[i].translatedText;
             }
         } catch (error) {
             logError("error applying translation layers: " + error);
